@@ -2,6 +2,7 @@ package ba.sum.fsre.ednevnik.controllers;
 
 import ba.sum.fsre.ednevnik.models.User;
 import ba.sum.fsre.ednevnik.repositories.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -10,21 +11,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class UserController {
+public class AuthController {
 
     @Autowired
     UserRepository userRepo;
 
-    @GetMapping("/users/add")
+    @GetMapping("/auth/register")
     public String add (Model model){
         User user = new User();
         model.addAttribute("user", user);
-        return "users/add";
+        return "users/register";
     }
 
-    @PostMapping("/users/add")
-    public String newUser (User user, BindingResult result, Model model){
+    @PostMapping("/auth/register")
+    public String newUser (@Valid User user, BindingResult result, Model model){
+        boolean errors = result.hasErrors();
+        if (errors){
+            model.addAttribute("user", user);
+            return "users/register";
+        }
         userRepo.save(user);
-        return "redirect:/users/add";
+        return "redirect:/auth/register";
     }
 }
