@@ -4,6 +4,7 @@ import ba.sum.fsre.ednevnik.models.User;
 import ba.sum.fsre.ednevnik.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -29,8 +30,12 @@ public class AuthController {
         if (errors){
             model.addAttribute("user", user);
             return "users/register";
+        } else {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setLozinka(encoder.encode(user.getLozinka()));
+            user.setPotvrdaLozinke(encoder.encode(user.getPotvrdaLozinke()));
+            userRepo.save(user);
+            return "redirect:/auth/register";
         }
-        userRepo.save(user);
-        return "redirect:/auth/register";
     }
 }
