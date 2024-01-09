@@ -32,10 +32,17 @@ public class AuthController {
             return "users/register";
         } else {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setLozinka(encoder.encode(user.getLozinka()));
-            user.setPotvrdaLozinke(encoder.encode(user.getPotvrdaLozinke()));
+            String passwordEncoded = encoder.encode(user.getLozinka());
+            user.setLozinka(passwordEncoded);
+            user.setPotvrdaLozinke(passwordEncoded);
             userRepo.save(user);
-            return "redirect:/auth/register";
+            return "redirect:/auth/login";
         }
+    }
+
+    @GetMapping("/auth/login")
+    public String login (Model model){
+        model.addAttribute("user", new User());
+        return "users/login";
     }
 }
