@@ -1,10 +1,10 @@
 package ba.sum.fsre.ednevnik.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -32,6 +32,10 @@ public class User {
     @Transient
     String potvrdaLozinke;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    Set<Role> roles = new HashSet<>();
+
     public User() {}
 
     public User(Long id, String ime, String prezime, String email, String lozinka, String potvrdaLozinke) {
@@ -41,7 +45,9 @@ public class User {
         this.email = email;
         this.lozinka = lozinka;
         this.potvrdaLozinke = potvrdaLozinke;
+        roles.add(Role.STUDENT);
     }
+
 
     public Long getId() {
         return id;
@@ -90,6 +96,15 @@ public class User {
 
     public void setPotvrdaLozinke(String potvrdaLozinke) {
         this.potvrdaLozinke = potvrdaLozinke;
+    }
+
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @AssertTrue(message = "Lozinke se moraju podudarati")
