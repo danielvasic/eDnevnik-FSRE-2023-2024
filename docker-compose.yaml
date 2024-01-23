@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  resto:
+  ednevnik:
     build: .
     container_name: ednevnik
     image: ednevnik:latest
@@ -17,7 +17,7 @@ services:
   mysql:
     container_name: mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
-    image: mysql:latest
+    image: mysql:5.7
     networks:
       - rest-network
     environment:
